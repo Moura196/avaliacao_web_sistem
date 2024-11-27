@@ -1,18 +1,23 @@
 package com.api.avaliacao.controller;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.api.avaliacao.entity.Treino;
+import com.api.avaliacao.entity.dto.AtualizarStatusDTO;
+import com.api.avaliacao.entity.dto.AtualizarTreinoDTO;
 import com.api.avaliacao.service.TreinoService;
 
 @RestController
@@ -27,7 +32,7 @@ public class TreinoController {
 	}
 	
 	@GetMapping("/buscar")
-	public ResponseEntity<?> listarExercicios() {
+	public ResponseEntity<?> listartreinos() {
 		try {
 			List<Treino> treinos = treinoService.listarTreinos();
 			return ResponseEntity.ok(treinos);
@@ -56,16 +61,52 @@ public class TreinoController {
 		}
 	}
 	
-	@GetMapping("/buscar/{codigo},{status}")
-	public ResponseEntity<?> listarTreinoPorCodigoOuStatus(Long codigo, String status) {
+	@GetMapping("/buscar/{status}")
+	public ResponseEntity<?> listarTreinoPorStatus(@RequestBody String status) {
 		try {
-			treinoService.excluirTreino(codigo);
+			treinoService.listarTreinoPorStatus(status);
 			return ResponseEntity.ok("Ecluído com sucesso");
 		} catch (Exception e) {
 			return new ResponseEntity("Erro de consulta", HttpStatusCode.valueOf(504));
 		}
 	}
 	
+	@PutMapping("/atualizar")
+	public ResponseEntity<?> atualizarTreino(@RequestBody AtualizarTreinoDTO treinoDTO) {
+		try {
+			AtualizarTreinoDTO treino = treinoService.atualizarTreino(treinoDTO);
+			return ResponseEntity.ok("Ecluído com sucesso");
+		} catch (Exception e) {
+			return new ResponseEntity("Erro de consulta", HttpStatusCode.valueOf(504));
+		}
+	}
+	
+	@PatchMapping("/atualizar/status")
+	public ResponseEntity<?> atualizarStatus(@RequestBody AtualizarStatusDTO statusDTO) {
+		try {
+			Treino treino = treinoService.atualizarStatus(statusDTO);
+			return ResponseEntity.ok("Ecluído com sucesso");
+		} catch (Exception e) {
+			return new ResponseEntity("Erro de consulta", HttpStatusCode.valueOf(504));
+		}
+	}
+	
+	@GetMapping("/buscar/{codigo}")
+	public ResponseEntity<?> listarTreinoPorCodigo(@RequestBody Long codigo) {
+		try {
+			Optional<Treino> treino = treinoService.listarTreinoPorCodigo(codigo);
+			
+			if (Optional.ofNullable(treino).isPresent())
+				return ResponseEntity.ok(treino.get());
+			else
+				return ResponseEntity.notFound().build();
+			
+		} catch (Exception e) {
+			
+			return new ResponseEntity("Erro de consulta", HttpStatusCode.valueOf(504));
+		
+		}
+	}
 	
 	
 	

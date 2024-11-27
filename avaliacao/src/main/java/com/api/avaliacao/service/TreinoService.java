@@ -61,32 +61,9 @@ public class TreinoService {
 		throw new Exception("Treino não existe");
 	}
 	
-	public Optional<Treino> listarTreinoPorCodigoOuStatus(Long codigo, String status) {
-		Optional<Treino> treino = treinoRepository.findByIdOuStatus(codigo, status);
+	public Optional<Treino> listarTreinoPorStatus(String status) {
+		Optional<Treino> treino = treinoRepository.findByStatus(status);
 		return treino;
 	}
 
-	
-
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

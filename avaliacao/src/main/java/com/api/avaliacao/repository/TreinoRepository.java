@@ -8,6 +8,6 @@ import com.api.avaliacao.entity.Treino;
 
 public interface TreinoRepository extends JpaRepository<Treino, Long> {
 
-	Optional<Treino> findByIdOuStatus(Long codigo, String status);
+	Optional<Treino> findByStatus(String status);
 
 }
